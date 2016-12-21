@@ -25,7 +25,7 @@ import org.apache.lucene.store.FSDirectory;
 public class LuceneService {
 
 	private String[] ids = {"1", "2", "3", "4"};
-	private String[] emails = {"11@qq.com", "22@qq.com", "33@qq.com", "44@qq.com" };
+	private String[] emails = {"11@wrt.com", "22@wrtc.com", "33@qq.com", "44@qq.com" };
 	private String[] fromNames = {"11_name", "22_name", "33_name", "44_name"};
 	private String[] contents ={"from 11_name@qq.com email, content is 11XX",
 			"from 22_name@qq.com email, content is 22YY",
@@ -49,10 +49,18 @@ public class LuceneService {
 			Document doc = null;
 			for(int i=0; i<ids.length; i++) {
 				doc = new Document();
+				Field content = new TextField("content", contents[i], Store.NO);
 				doc.add(new StringField("id", ids[i], Store.YES));
 				doc.add(new StringField("email", emails[i], Store.YES));
 				doc.add(new StringField("fromName", fromNames[i], Store.YES));
-				doc.add(new TextField("content", contents[i], Store.NO));
+				doc.add(content);
+				if(emails[i].substring(emails[i].indexOf("@") + 1).contains("wrt")) {
+					content.setBoost(2.0f);
+				} else if(emails[i].substring(emails[i].indexOf("@") + 1).contains("wrtc")) {
+					content.setBoost(1.5f);
+				} else {
+					content.setBoost(0.5f);
+				}
 				writer.addDocument(doc);
 			}
 		} catch (IOException e) {
