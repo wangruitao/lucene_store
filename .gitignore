@@ -1,0 +1,26 @@
+# Package Files #
+*.war
+*.ear
+
+*.class
+*.bak
+*.tmp
+*.log
+
+/bin/
+build.sh
+integration-repo
+/build/
+.settings/
+# IDEA metadata and output dirs
+/.idea/
+*.iml
+*.ipr
+*.iws
+out
+
+classes/
+target/
+
+
+
