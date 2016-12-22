@@ -41,4 +41,16 @@ public class TestLuceneService {
 		ls.update();
 	}
 	
+	@Test
+	public void testDirectoryReader() {
+		for(int i=0; i<10; i++) {
+			ls.search();
+			System.out.println("########################################");
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
