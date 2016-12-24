@@ -19,18 +19,23 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-public class LuceneService {
+public class IndexUtils {
 
 	private String[] ids = {"1", "2", "3", "4"};
-	private String[] emails = {"33@qq.com", "44@qq.com", "11@wrt.com", "22@wrtc.com" };
-	private String[] fromNames = {"11_name", "22_name", "33_name", "44_name"};
+	private String[] emails = {"33@qq.com", "44@qq.com", "11@wrt.com", "32@wrtc.com" };
+	private String[] fromNames = {"mack", "irukck", "mack", "joik"};
 	private String[] contents ={"from 11_name@qq.com email, content is 11XX",
 			"from 22_name@qq.com email, content is 22YY",
 			"from 33_name@qq.com email, content is 33CC",
@@ -39,21 +44,30 @@ public class LuceneService {
 	private int[] nums = {1,2,3,4};
 	private Date[] dates = null;
 	
-	private Directory dic = null;
-	private DirectoryReader reader = null;
+	private static Directory dic = null;
+	private static DirectoryReader reader = null;
 	
-	public LuceneService() {
+	static {
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 			dic = FSDirectory.open(new File("D:/lucene temp/index02").toPath());
 			reader = DirectoryReader.open(dic);
-			dates = new Date[ids.length];
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public DirectoryReader getDirectoryReader() {
+		return reader;
+	}
+	
+	public IndexUtils() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		dates = new Date[ids.length];
+		try {
 			dates[0] = sdf.parse("2016-12-22");
 			dates[1] = sdf.parse("2016-11-21");
 			dates[2] = sdf.parse("2015-06-09");
 			dates[3] = sdf.parse("2014-07-13");
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (java.text.ParseException e) {
 			e.printStackTrace();
 		}
@@ -203,4 +217,93 @@ public class LuceneService {
 			}
 		}
 	}
+	
+	public void searchTermQuery() {
+		IndexSearcher search = getIndexSearcher();
+		TermQuery query = new TermQuery(new Term("content", "from"));
+		try {
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			Document doc = null;
+			for(ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchTermRangeQuery() {
+		IndexSearcher search = getIndexSearcher();
+		TermRangeQuery query = TermRangeQuery.newStringRange("fromNames", "1", "3", false, true);
+		try {
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for(ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchPrefixQuery() {
+		IndexSearcher search = getIndexSearcher();
+		PrefixQuery query = new PrefixQuery(new Term("email", "3"));
+		try {
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for(ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchWildcardQuery() {
+		IndexSearcher search = getIndexSearcher();
+		WildcardQuery query = new WildcardQuery(new Term("email", "4*"));
+		try {
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for(ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void searchFuzzyQuery() {
+		IndexSearcher search = getIndexSearcher();
+		FuzzyQuery query = new FuzzyQuery(new Term("fromName", "jack"), 2);
+		try {
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for(ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

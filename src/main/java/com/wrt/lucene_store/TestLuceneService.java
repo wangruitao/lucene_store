@@ -4,11 +4,11 @@ import org.junit.Test;
 
 public class TestLuceneService {
 
-	private LuceneService ls;
+	private IndexUtils ls;
 	
 	
 	public TestLuceneService() {
-		this.ls = new LuceneService();
+		this.ls = new IndexUtils();
 	}
 
 	@Test
@@ -52,5 +52,30 @@ public class TestLuceneService {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@Test
+	public void testSearchTermQuery() {
+		ls.searchTermQuery();
+	}
+	
+	@Test
+	public void testSearchTermRangeQuery() {
+		ls.searchTermRangeQuery();
+	}
+	
+	@Test
+	public void testSearchPrefixQuery() {
+		ls.searchPrefixQuery();
+	}
+	
+	@Test
+	public void testSearchWildcardQuery() {
+		ls.searchWildcardQuery();
+	}
+	
+	@Test
+	public void testSearchFuzzyQuery() {
+		ls.searchFuzzyQuery();
 	}
 }
