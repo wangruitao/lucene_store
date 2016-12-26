@@ -330,4 +330,27 @@ public class SearchUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void searchPage(String fieldName, String searchContent, Integer pageNumber, Integer pageSize) {
+		try {
+			IndexSearcher search = IndexUtils.getIndexSearcher();
+			QueryParser parse = new QueryParser(fieldName, new StandardAnalyzer());
+			Query query = parse.parse(searchContent);
+			int totalNumber = pageNumber * pageSize;
+			TopDocs tops = search.search(query, totalNumber);
+			ScoreDoc[] score = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for (int i=(pageNumber-1)*pageSize; i<totalHits; i++) {
+				doc = search.doc(score[i].doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
+						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }

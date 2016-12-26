@@ -6,11 +6,13 @@ public class TestLuceneService {
 
 	private IndexUtils ius;
 	private SearchUtils sus;
+	private FileIndexUtils fius;
 	
 	
 	public TestLuceneService() {
 		this.ius = new IndexUtils();
 		this.sus = new SearchUtils();
+		this.fius = new FileIndexUtils();
 	}
 
 	@Test
@@ -99,5 +101,10 @@ public class TestLuceneService {
 	@Test
 	public void testSearchPhraseQuery() {
 		sus.searchPhraseQuery();
+	}
+	
+	@Test
+	public void testCopyFiles() {
+		fius.copyFiles();
 	}
 }
