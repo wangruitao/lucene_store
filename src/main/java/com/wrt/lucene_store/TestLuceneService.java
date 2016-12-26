@@ -4,47 +4,49 @@ import org.junit.Test;
 
 public class TestLuceneService {
 
-	private IndexUtils ls;
+	private IndexUtils ius;
+	private SearchUtils sus;
 	
 	
 	public TestLuceneService() {
-		this.ls = new IndexUtils();
+		this.ius = new IndexUtils();
+		this.sus = new SearchUtils();
 	}
 
 	@Test
 	public void testCreate() {
-		ls.create();
+		ius.create();
 	}
 	
 	@Test
-	public void testSearch() {
-		ls.search();
+	public void testSearchsearchQueryParser() {
+		sus.searchQueryParser();
 	}
 	
 	@Test
 	public void testQuery() {
-		ls.query();
+		sus.query();
 	}
 	
 	@Test
 	public void testDelete() {
-		ls.delete();
+		ius.delete();
 	}
 	
 	@Test
 	public void testForceDelete() {
-		ls.forceDelete();
+		ius.forceDelete();
 	}
 	
 	@Test
 	public void testUpdate() {
-		ls.update();
+		ius.update();
 	}
 	
 	@Test
 	public void testDirectoryReader() {
 		for(int i=0; i<10; i++) {
-			ls.search();
+			sus.searchQueryParser();
 			System.out.println("########################################");
 			try {
 				Thread.sleep(3000);
@@ -56,26 +58,46 @@ public class TestLuceneService {
 	
 	@Test
 	public void testSearchTermQuery() {
-		ls.searchTermQuery();
+		sus.searchTermQuery();
 	}
 	
 	@Test
 	public void testSearchTermRangeQuery() {
-		ls.searchTermRangeQuery();
+		sus.searchTermRangeQuery();
 	}
 	
 	@Test
 	public void testSearchPrefixQuery() {
-		ls.searchPrefixQuery();
+		sus.searchPrefixQuery();
 	}
 	
 	@Test
 	public void testSearchWildcardQuery() {
-		ls.searchWildcardQuery();
+		sus.searchWildcardQuery();
 	}
 	
 	@Test
 	public void testSearchFuzzyQuery() {
-		ls.searchFuzzyQuery();
+		sus.searchFuzzyQuery();
+	}
+	
+	@Test
+	public void testSearchRegexpQuery() {
+		sus.searchRegexpQuery();
+	}
+	
+	@Test
+	public void testSearchNumericRangeQuery() {
+		sus.searchNumericRangeQuery();
+	}
+	
+	@Test
+	public void testSearchBooleanQuery() {
+		sus.searchBooleanQuery();
+	}
+	
+	@Test
+	public void testSearchPhraseQuery() {
+		sus.searchPhraseQuery();
 	}
 }

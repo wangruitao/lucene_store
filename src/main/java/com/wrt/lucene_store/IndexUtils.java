@@ -17,17 +17,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PrefixQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TermRangeQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -37,9 +27,12 @@ public class IndexUtils {
 	private String[] emails = {"33@qq.com", "44@qq.com", "11@wrt.com", "32@wrtc.com" };
 	private String[] fromNames = {"mack", "irukck", "mack", "joik"};
 	private String[] contents ={"from 11_name@qq.com email, content is 11XX",
-			"from 22_name@qq.com email, content is 22YY",
-			"from 33_name@qq.com email, content is 33CC",
-			"from 44_name@qq.com email, content is 44NN"};
+			"quick brown fox",
+			"jumps over lazy, broun dog",
+			"jumps over extremely very lazy broxn dog"};
+//			"from 22_name@qq.com email, content is 11YY",
+//			"from 33_name@qq.com email, content is 33CC",
+//			"from 44_name@qq.com email, content is 44NN"};
 	
 	private int[] nums = {1,2,3,4};
 	private Date[] dates = null;
@@ -49,7 +42,7 @@ public class IndexUtils {
 	
 	static {
 		try {
-			dic = FSDirectory.open(new File("D:/lucene temp/index02").toPath());
+			dic = FSDirectory.open(new File("H:/lucenetemp/index02").toPath());
 			reader = DirectoryReader.open(dic);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -73,7 +66,7 @@ public class IndexUtils {
 		}
 	}
 	
-	public IndexSearcher getIndexSearcher() {
+	public static DirectoryReader getReader() {
 		try {
 			if (reader == null) {
 				reader = DirectoryReader.open(dic);
@@ -87,7 +80,11 @@ public class IndexUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new IndexSearcher(reader);
+		return reader;
+	}
+	
+	public static IndexSearcher getIndexSearcher() {
+		return new IndexSearcher(getReader());
 	}
 
 	public void create() {
@@ -115,6 +112,7 @@ public class IndexUtils {
 				}
 				writer.addDocument(doc);
 			}
+			writer.commit();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -126,36 +124,6 @@ public class IndexUtils {
 				}
 			}
 		}
-	}
-	
-	public void search() {
-		try {
-			IndexSearcher search = getIndexSearcher();
-			QueryParser parse = new QueryParser("content", new StandardAnalyzer());
-			Query query = parse.parse("content");
-			TopDocs tops = search.search(query, 20);
-			ScoreDoc[] score = tops.scoreDocs;
-			Document doc = null;
-			for(ScoreDoc sd : score) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void query() {
-		try {
-			reader = DirectoryReader.open(dic);
-			System.out.println("numDocs: " + reader.numDocs());
-			System.out.println("maxDoc: " + reader.maxDoc());
-			System.out.println("numDeletedDocs: " + reader.numDeletedDocs());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
 	}
 	
 	public void delete() {
@@ -215,94 +183,6 @@ public class IndexUtils {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	public void searchTermQuery() {
-		IndexSearcher search = getIndexSearcher();
-		TermQuery query = new TermQuery(new Term("content", "from"));
-		try {
-			TopDocs tops = search.search(query, 10);
-			ScoreDoc[] scoreDocs = tops.scoreDocs;
-			Document doc = null;
-			for(ScoreDoc sd : scoreDocs) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void searchTermRangeQuery() {
-		IndexSearcher search = getIndexSearcher();
-		TermRangeQuery query = TermRangeQuery.newStringRange("fromNames", "1", "3", false, true);
-		try {
-			TopDocs tops = search.search(query, 10);
-			ScoreDoc[] scoreDocs = tops.scoreDocs;
-			int totalHits = tops.totalHits;
-			System.out.println("查询总数： " + totalHits);
-			Document doc = null;
-			for(ScoreDoc sd : scoreDocs) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void searchPrefixQuery() {
-		IndexSearcher search = getIndexSearcher();
-		PrefixQuery query = new PrefixQuery(new Term("email", "3"));
-		try {
-			TopDocs tops = search.search(query, 10);
-			ScoreDoc[] scoreDocs = tops.scoreDocs;
-			int totalHits = tops.totalHits;
-			System.out.println("查询总数： " + totalHits);
-			Document doc = null;
-			for(ScoreDoc sd : scoreDocs) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void searchWildcardQuery() {
-		IndexSearcher search = getIndexSearcher();
-		WildcardQuery query = new WildcardQuery(new Term("email", "4*"));
-		try {
-			TopDocs tops = search.search(query, 10);
-			ScoreDoc[] scoreDocs = tops.scoreDocs;
-			int totalHits = tops.totalHits;
-			System.out.println("查询总数： " + totalHits);
-			Document doc = null;
-			for(ScoreDoc sd : scoreDocs) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void searchFuzzyQuery() {
-		IndexSearcher search = getIndexSearcher();
-		FuzzyQuery query = new FuzzyQuery(new Term("fromName", "jack"), 2);
-		try {
-			TopDocs tops = search.search(query, 10);
-			ScoreDoc[] scoreDocs = tops.scoreDocs;
-			int totalHits = tops.totalHits;
-			System.out.println("查询总数： " + totalHits);
-			Document doc = null;
-			for(ScoreDoc sd : scoreDocs) {
-				doc = search.doc(sd.doc);
-				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:" + doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
