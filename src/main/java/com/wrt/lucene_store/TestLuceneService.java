@@ -7,12 +7,14 @@ public class TestLuceneService {
 	private IndexUtils ius;
 	private SearchUtils sus;
 	private FileIndexUtils fius;
+	private FileSearchUtils fsus;
 	
 	
 	public TestLuceneService() {
 		this.ius = new IndexUtils();
 		this.sus = new SearchUtils();
 		this.fius = new FileIndexUtils();
+		this.fsus = new FileSearchUtils();
 	}
 
 	@Test
@@ -107,4 +109,26 @@ public class TestLuceneService {
 	public void testCopyFiles() {
 		fius.copyFiles();
 	}
+	
+	/*************************文件相关 lucene**************************************/
+	@Test
+	public void testFileCreate() {
+		fius.create();
+	}
+	
+	@Test
+	public void testFileSearch() {
+		fsus.search("name", "eula_2052*");
+	}
+	
+	@Test
+	public void testFileSearchPage() {
+		fsus.searchPage("name", "eula_2052*", 1, 5);
+	}
+	
+	@Test
+	public void testFileSeachAfter() {
+		fsus.seachAfter("name", "eula_2052*", 2, 5);
+	}
+	
 }
