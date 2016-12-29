@@ -27,7 +27,6 @@ public class AnalysisUtils {
 		
 	}
 	
-	
 	public void displayAllToken(String str, Analyzer a) {
 		TokenStream tokenStream = a.tokenStream("content", new StringReader(str));
 		try {
@@ -44,6 +43,6 @@ public class AnalysisUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
 }
