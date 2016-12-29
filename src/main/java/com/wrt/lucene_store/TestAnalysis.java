@@ -26,4 +26,16 @@ public class TestAnalysis {
 		System.out.println("*********************************************");
 		au.displayToken(str, sta);
 	}
+	
+	@Test
+	public void testStopAnalyzer() {
+
+		String str = "then at the heart of the most lax, alert, and most low awareness, and left it godsend failed.";
+//		String[] atr = {};
+		String[] atr = {"lax", "low"};
+		Analyzer sda = new MyStopAnalyzer(atr);
+		
+		AnalysisUtils au = new AnalysisUtils();
+		au.displayAllToken(str, sda);
+	}
 }
