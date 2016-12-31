@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.page;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-public class FileIndexUtils {
+public class PageIndexUtils {
 
 	private static Directory dic = null;
 	private static DirectoryReader reader = null;

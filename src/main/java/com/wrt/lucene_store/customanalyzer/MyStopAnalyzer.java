@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.customanalyzer;
 
 import java.util.HashSet;
 import java.util.Set;

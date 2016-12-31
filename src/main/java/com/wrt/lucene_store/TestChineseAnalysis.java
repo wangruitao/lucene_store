@@ -7,6 +7,8 @@ import org.junit.Test;
 import com.chenlb.mmseg4j.Dictionary;
 import com.chenlb.mmseg4j.analysis.MMSegAnalyzer;
 import com.chenlb.mmseg4j.analysis.SimpleAnalyzer;
+import com.wrt.lucene_store.chinese.ChineseAnalyzerUtils;
+import com.wrt.lucene_store.customsynonym.MyAnalyzer;
 
 public class TestChineseAnalysis {
 
@@ -17,6 +19,12 @@ public class TestChineseAnalysis {
 		Analyzer cjk = new SimpleAnalyzer(Dictionary.getInstance("H:\\lucenetemp\\data"));
 		String str = "我来自中国内蒙古赤峰市松山区";
 		au.displayToken(str, cjk);
+	}
+	
+	@Test
+	public void testCustomSynonym() {
+		ChineseAnalyzerUtils au = new ChineseAnalyzerUtils();
+		MyAnalyzer ma = new MyAnalyzer();
 	}
 	
 	@Test

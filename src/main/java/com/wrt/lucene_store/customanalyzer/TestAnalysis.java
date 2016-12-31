@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.customanalyzer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
@@ -6,6 +6,8 @@ import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.junit.Test;
+
+import com.wrt.lucene_store.tokeninfo.TokenInfoUtils;
 
 public class TestAnalysis {
 
@@ -16,7 +18,7 @@ public class TestAnalysis {
 		Analyzer wa = new WhitespaceAnalyzer();
 		Analyzer sta = new StopAnalyzer();
 		
-		AnalysisUtils au = new AnalysisUtils();
+		TokenInfoUtils au = new TokenInfoUtils();
 		String str = "then at the heart of the most lax, alert, and most low awareness, and left it godsend failed.";
 		au.displayToken(str, sda);
 		System.out.println("*********************************************");
@@ -35,7 +37,7 @@ public class TestAnalysis {
 		String[] atr = {"lax", "low"};
 		Analyzer sda = new MyStopAnalyzer(atr);
 		
-		AnalysisUtils au = new AnalysisUtils();
+		TokenInfoUtils au = new TokenInfoUtils();
 		au.displayAllToken(str, sda);
 	}
 }

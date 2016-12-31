@@ -2,19 +2,24 @@ package com.wrt.lucene_store;
 
 import org.junit.Test;
 
+import com.wrt.lucene_store.index.IndexUtils;
+import com.wrt.lucene_store.index.SearchUtils;
+import com.wrt.lucene_store.page.PageIndexUtils;
+import com.wrt.lucene_store.page.PageSearchUtils;
+
 public class TestLuceneService {
 
 	private IndexUtils ius;
 	private SearchUtils sus;
-	private FileIndexUtils fius;
-	private FileSearchUtils fsus;
+	private PageIndexUtils fius;
+	private PageSearchUtils fsus;
 	
 	
 	public TestLuceneService() {
 		this.ius = new IndexUtils();
 		this.sus = new SearchUtils();
-		this.fius = new FileIndexUtils();
-		this.fsus = new FileSearchUtils();
+		this.fius = new PageIndexUtils();
+		this.fsus = new PageSearchUtils();
 	}
 
 	@Test

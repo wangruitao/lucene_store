@@ -57,6 +57,20 @@
 	    <artifactId>mmseg4j-analysis</artifactId>
 	    <version>1.9.2</version>
 	</dependency>
+	
+	<!-- mmseg4j 中文分词 -->
+	<dependency>
+	    <groupId>com.chenlb.mmseg4j</groupId>
+	    <artifactId>mmseg4j-core</artifactId>
+	    <version>1.10.0</version>
+	</dependency>
+  	
+  	<!-- https://mvnrepository.com/artifact/com.chenlb.mmseg4j/mmseg4j-analysis -->
+	<dependency>
+	    <groupId>com.chenlb.mmseg4j</groupId>
+	    <artifactId>mmseg4j-analysis</artifactId>
+	    <version>1.9.1</version>
+	</dependency>
   	
     <!-- https://mvnrepository.com/artifact/junit/junit -->
 	<dependency>

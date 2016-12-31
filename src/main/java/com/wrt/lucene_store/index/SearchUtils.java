@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.index;
 
 import java.io.IOException;
 

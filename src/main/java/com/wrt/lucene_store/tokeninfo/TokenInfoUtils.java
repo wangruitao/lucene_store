@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.tokeninfo;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -10,7 +10,7 @@ import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
-public class AnalysisUtils {
+public class TokenInfoUtils {
 
 	public void displayToken(String str, Analyzer a) {
 		TokenStream tokenStream = a.tokenStream("content", new StringReader(str));

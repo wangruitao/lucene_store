@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.page;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
-public class FileSearchUtils {
+public class PageSearchUtils {
 
 
 	/**
@@ -21,7 +21,7 @@ public class FileSearchUtils {
 	 * @param content 查询内容
 	 */
 	public void search(String field, String content) {
-		DirectoryReader reader = FileIndexUtils.getDirectoryReader();
+		DirectoryReader reader = PageIndexUtils.getDirectoryReader();
 		IndexSearcher search = new IndexSearcher(reader);
 		QueryParser parser = new QueryParser(field, new StandardAnalyzer());
 		try {
@@ -52,7 +52,7 @@ public class FileSearchUtils {
 	 * @param pageSize 每页显示几行
 	 */
 	public void searchPage(String field, String content, Integer pageNum, Integer pageSize) {
-		DirectoryReader reader = FileIndexUtils.getDirectoryReader();
+		DirectoryReader reader = PageIndexUtils.getDirectoryReader();
 		IndexSearcher search = new IndexSearcher(reader);
 		QueryParser parser = new QueryParser(field, new StandardAnalyzer());
 		try {
@@ -81,7 +81,7 @@ public class FileSearchUtils {
 	 * @param pageSize 每页显示几行
 	 */
 	public void seachAfter(String field, String content, Integer pageNum, Integer pageSize) {
-		DirectoryReader reader = FileIndexUtils.getDirectoryReader();
+		DirectoryReader reader = PageIndexUtils.getDirectoryReader();
 		IndexSearcher search = new IndexSearcher(reader);
 		QueryParser parser = new QueryParser(field, new StandardAnalyzer());
 		try {

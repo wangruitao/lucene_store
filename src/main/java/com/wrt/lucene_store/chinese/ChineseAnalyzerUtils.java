@@ -1,4 +1,4 @@
-package com.wrt.lucene_store;
+package com.wrt.lucene_store.chinese;
 
 import java.io.IOException;
 import java.io.StringReader;
