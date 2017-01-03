@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -80,7 +80,7 @@ public class PageIndexUtils {
 				for(File file : flist) {
 					doc = new Document();
 					doc.add(new StringField("name", file.getName(), Store.YES));
-					doc.add(new IntField("size", (int)(file.length()/1024), Store.YES));
+					doc.add(new NumericDocValuesField("size", (int)(file.length()/1024)));
 					doc.add(new StringField("path", file.getAbsolutePath(), Store.YES));
 					doc.add(new TextField("content", FileUtils.readFileToString(file, Charset.forName("UTF-8")), Store.NO));
 					list.add(doc);
