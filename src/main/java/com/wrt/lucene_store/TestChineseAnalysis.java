@@ -5,7 +5,6 @@ import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.junit.Test;
 
 import com.chenlb.mmseg4j.Dictionary;
-import com.chenlb.mmseg4j.analysis.MMSegAnalyzer;
 import com.chenlb.mmseg4j.analysis.SimpleAnalyzer;
 import com.wrt.lucene_store.chinese.ChineseAnalyzerUtils;
 import com.wrt.lucene_store.customsynonym.MyAnalyzer;
@@ -25,6 +24,8 @@ public class TestChineseAnalysis {
 	public void testCustomSynonym() {
 		ChineseAnalyzerUtils au = new ChineseAnalyzerUtils();
 		MyAnalyzer ma = new MyAnalyzer();
+		String str = "我来自中国内蒙古赤峰市";
+		au.displayToken(str, ma);
 	}
 	
 	@Test

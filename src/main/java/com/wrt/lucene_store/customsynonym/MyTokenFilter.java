@@ -8,7 +8,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 
-public class MyTokenFilter extends TokenFilter {
+public final class MyTokenFilter extends TokenFilter {
 
 	private CharTermAttribute ca;
 	private PositionIncrementAttribute  pia;
@@ -20,6 +20,7 @@ public class MyTokenFilter extends TokenFilter {
 		super(input);
 		ca = input.addAttribute(CharTermAttribute.class);
 		pia = input.addAttribute(PositionIncrementAttribute.class);
+		sameStack = new Stack<String>();
 	}
 	
 	@Override
