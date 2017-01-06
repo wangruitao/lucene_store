@@ -12,6 +12,7 @@ import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -21,7 +22,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
-import org.apache.lucene.util.BytesRef;
 
 public class SearchUtils {
 
@@ -251,8 +251,9 @@ public class SearchUtils {
 
 	public void searchNumericRangeQuery() {
 		IndexSearcher search = IndexUtils.getIndexSearcher();
-		Query query = NumericRangeQuery.("num", new BytesRef(1), new BytesRef(3), true, false);
 		try {
+			
+			Query query =  NumericRangeQuery.newFloatRange("num", 2f, 4f, true, true);
 			TopDocs tops = search.search(query, 10);
 			ScoreDoc[] scoreDocs = tops.scoreDocs;
 			int totalHits = tops.totalHits;
@@ -265,7 +266,7 @@ public class SearchUtils {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 	}
 
 	public void searchBooleanQuery() {

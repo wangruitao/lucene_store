@@ -29,11 +29,13 @@ public class ChineseAnalyzerUtils {
 	private static final String PATH = "H:/lucenetemp/index04";
 	private static Directory dir;
 	private static IndexWriter writer;
+	private static DirectoryReader reader = null;
 
 	static {
 		Path path = Paths.get(PATH);
 		try {
 			dir = FSDirectory.open(path);
+			reader = DirectoryReader.open(dir);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,9 +61,16 @@ public class ChineseAnalyzerUtils {
 	}
 
 	public void search(String searchName, Analyzer mmsa) {
-		DirectoryReader reader = null;
 		try {
-			reader = DirectoryReader.open(dir);
+			if(reader == null) {
+				reader = DirectoryReader.open(dir);
+			} else {
+				DirectoryReader tr = DirectoryReader.openIfChanged(reader);
+				if(tr != null) {
+					reader.close();
+					reader = tr;
+				}
+			}
 			IndexSearcher search = new IndexSearcher(reader);
 			QueryParser parser = new QueryParser("content", mmsa);
 			Query query = parser.parse(searchName);
