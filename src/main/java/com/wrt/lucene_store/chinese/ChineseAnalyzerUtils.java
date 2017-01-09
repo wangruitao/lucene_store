@@ -35,12 +35,22 @@ public class ChineseAnalyzerUtils {
 		Path path = Paths.get(PATH);
 		try {
 			dir = FSDirectory.open(path);
-			reader = DirectoryReader.open(dir);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public static DirectoryReader getReader() {
+		if(reader == null) {
+			try {
+				reader = DirectoryReader.open(dir);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} 
+		return reader;
+	}
+	
 	public void index(String str) {
 		Document doc = new Document();
 		doc.add(new TextField("content", new StringReader(str)));

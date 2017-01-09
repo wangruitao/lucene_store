@@ -9,8 +9,9 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.LongPoint;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -34,7 +35,7 @@ public class IndexUtils {
 //			"from 33_name@qq.com email, content is 33CC",
 //			"from 44_name@qq.com email, content is 44NN"};
 	
-	private int[] nums = {1,2,3,4};
+	private int[] nums = {7,4,6,2};
 	private Date[] dates = null;
 	
 	private static Directory dic = null;
@@ -43,13 +44,19 @@ public class IndexUtils {
 	static {
 		try {
 			dic = FSDirectory.open(new File("H:/lucenetemp/index02").toPath());
-			reader = DirectoryReader.open(dic);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public DirectoryReader getDirectoryReader() {
+	public static DirectoryReader getDirectoryReader() {
+		if(reader == null) {
+			try {
+				reader = DirectoryReader.open(dic);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return reader;
 	}
 	
@@ -99,8 +106,10 @@ public class IndexUtils {
 				doc.add(new StringField("id", ids[i], Store.YES));
 				doc.add(new StringField("email", emails[i], Store.YES));
 				doc.add(new StringField("fromName", fromNames[i], Store.YES));
-				doc.add(new IntField("num", nums[i], Store.YES));
-				doc.add(new LongField("date", dates[i].getTime(), Store.YES));
+				doc.add(new IntPoint("num", nums[i]));
+				doc.add(new StoredField("numsf", nums[i]));
+				doc.add(new LongPoint("date", dates[i].getTime()));
+				doc.add(new StoredField("datesf", dates[i].getTime()));
 				doc.add(content);
 				//在content上加权值
 				if(emails[i].substring(emails[i].indexOf("@") + 1).contains("wrt")) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -12,7 +13,6 @@ import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -121,7 +121,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : score) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -147,7 +147,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -166,7 +166,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -185,7 +185,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -204,7 +204,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -223,7 +223,7 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -242,18 +242,18 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void searchNumericRangeQuery() {
+	public void searchIntPointExactQuery() {
 		IndexSearcher search = IndexUtils.getIndexSearcher();
 		try {
 			
-			Query query =  NumericRangeQuery.newFloatRange("num", 2f, 4f, true, true);
+			Query query =  IntPoint.newExactQuery("num", 2);
 			TopDocs tops = search.search(query, 10);
 			ScoreDoc[] scoreDocs = tops.scoreDocs;
 			int totalHits = tops.totalHits;
@@ -262,7 +262,27 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
-						+ doc.get("content") + " num:" + doc.get("num") + " date:" + doc.get("date"));
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public void searchNumericRangeQuery() {
+		IndexSearcher search = IndexUtils.getIndexSearcher();
+		try {
+			
+			Query query =  IntPoint.newRangeQuery("num", 2, 4);
+			TopDocs tops = search.search(query, 10);
+			ScoreDoc[] scoreDocs = tops.scoreDocs;
+			int totalHits = tops.totalHits;
+			System.out.println("查询总数： " + totalHits);
+			Document doc = null;
+			for (ScoreDoc sd : scoreDocs) {
+				doc = search.doc(sd.doc);
+				System.out.println("id: " + doc.get("id") + " email:" + doc.get("email") + " content:"
+						+ doc.get("content") + " num:" + doc.get("numsf") + " date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -284,8 +304,8 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " --email:" + doc.get("email") + " --fromName:"
-						+ doc.get("fromName") + " --content:" + doc.get("content") + " --num:" + doc.get("num")
-						+ " --date:" + doc.get("date"));
+						+ doc.get("fromName") + " --content:" + doc.get("content") + " --num:" + doc.get("numsf")
+						+ " --date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -324,8 +344,8 @@ public class SearchUtils {
 			for (ScoreDoc sd : scoreDocs) {
 				doc = search.doc(sd.doc);
 				System.out.println("id: " + doc.get("id") + " --email:" + doc.get("email") + " --fromName:"
-						+ doc.get("fromName") + " --content:" + doc.get("content") + " --num:" + doc.get("num")
-						+ " --date:" + doc.get("date"));
+						+ doc.get("fromName") + " --content:" + doc.get("content") + " --num:" + doc.get("numsf")
+						+ " --date:" + doc.get("datesf"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

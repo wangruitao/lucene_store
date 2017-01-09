@@ -20,6 +20,7 @@ public class TestAnalysis {
 		
 		TokenInfoUtils au = new TokenInfoUtils();
 		String str = "then at the heart of the most lax, alert, and most low awareness, and left it godsend failed.";
+		str = "是中国人啊";
 		au.displayToken(str, sda);
 		System.out.println("*********************************************");
 		au.displayToken(str, spa);

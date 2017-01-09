@@ -96,6 +96,10 @@ public class TestLuceneService {
 	}
 	
 	@Test
+	public void testSearchIntPointExactQuery() {
+		sus.searchIntPointExactQuery();
+	}
+	@Test
 	public void testSearchNumericRangeQuery() {
 		sus.searchNumericRangeQuery();
 	}
