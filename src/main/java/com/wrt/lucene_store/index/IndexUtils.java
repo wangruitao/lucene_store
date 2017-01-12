@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StoredField;
@@ -49,7 +50,7 @@ public class IndexUtils {
 		}
 	}
 	
-	public static DirectoryReader getDirectoryReader() {
+/*	public static DirectoryReader getDirectoryReader() {
 		if(reader == null) {
 			try {
 				reader = DirectoryReader.open(dic);
@@ -58,7 +59,7 @@ public class IndexUtils {
 			}
 		}
 		return reader;
-	}
+	}*/
 	
 	public IndexUtils() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");

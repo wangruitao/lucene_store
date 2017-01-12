@@ -6,6 +6,7 @@ import com.wrt.lucene_store.index.IndexUtils;
 import com.wrt.lucene_store.index.SearchUtils;
 import com.wrt.lucene_store.page.PageIndexUtils;
 import com.wrt.lucene_store.page.PageSearchUtils;
+import com.wrt.lucene_store.sortandfilter.SortAndFilterUtils;
 
 public class TestLuceneService {
 
@@ -13,6 +14,7 @@ public class TestLuceneService {
 	private SearchUtils sus;
 	private PageIndexUtils fius;
 	private PageSearchUtils fsus;
+	private SortAndFilterUtils safus;
 	
 	
 	public TestLuceneService() {
@@ -20,6 +22,7 @@ public class TestLuceneService {
 		this.sus = new SearchUtils();
 		this.fius = new PageIndexUtils();
 		this.fsus = new PageSearchUtils();
+		this.safus = new SortAndFilterUtils();
 	}
 
 	@Test
@@ -114,12 +117,20 @@ public class TestLuceneService {
 		sus.searchPhraseQuery();
 	}
 	
+	/*************************文件相关 lucene PageIndexUtils.java**************************************/
+	
 	@Test
 	public void testCopyFiles() {
-		fius.copyFiles();
+		String suffix = "ini";
+		String name = "aaa";
+		fius.copyFiles(name, suffix);
 	}
 	
-	/*************************文件相关 lucene**************************************/
+	@Test
+	public void testDeleteSpecifiedSuffixFile() {
+		fius.deleteSpecifiedSuffixFile("txt");
+	}
+	
 	@Test
 	public void testFileCreate() {
 		fius.create();
@@ -138,6 +149,12 @@ public class TestLuceneService {
 	@Test
 	public void testFileSeachAfter() {
 		fsus.seachAfter("name", "eula_2052*", 2, 5);
+	}
+	
+	
+	@Test
+	public void testSortSearch() {
+		safus.sortSearch();
 	}
 	
 }

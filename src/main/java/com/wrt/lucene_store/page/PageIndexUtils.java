@@ -10,7 +10,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.NumericDocValuesField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -23,37 +25,55 @@ public class PageIndexUtils {
 
 	private static Directory dic = null;
 	private static DirectoryReader reader = null;
-	private String path = "H:/lucenetemp/file";
+	private String path = "H:/lucenetemp/file2";
 	
 	static {
 		try {
 			dic = FSDirectory.open(new File("H:/lucenetemp/index03").toPath());
-			reader = DirectoryReader.open(dic);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static DirectoryReader getDirectoryReader() {
+		if(reader == null) {
+			try {
+				reader = DirectoryReader.open(dic);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return reader;
 	}
 	
-	public void copyFiles() {
+	public void copyFiles(String name, String suffix) {
 		File files = createDirectory(path);
 		if(files.isDirectory()) {
 			File[] flist = files.listFiles();
-			for(int i=1; i<10; i++) {
-				int num = 0;
-				for(File file : flist) {
-					String fileName = file.getName();
-					String[] fileA = fileName.split("\\.");
-					try {
-						FileUtils.copyFile(file, new File(path + "/" + fileA[0] + "_" + i*num + "." + fileA[1]));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					num ++;
+			int num = 0;
+			for(File file : flist) {
+//				String fileName = file.getName();
+//				String[] fileA = fileName.split("\\.");
+				try {
+					FileUtils.copyFile(file, new File(path + "/" + name + "_" + num + "." + suffix));
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+				num ++;
+			}
+		}
+	}
+	
+	public void deleteSpecifiedSuffixFile(String suffix) {
+		File files = createDirectory(path);
+		if(files.isDirectory()) {
+			File[] flist = files.listFiles();
+			for(File file : flist) {
+				String fileName = file.getName();
+				if(fileName.lastIndexOf(suffix) > 0) {
+					continue;
+				}
+				file.delete();
 			}
 		}
 	}
@@ -73,22 +93,29 @@ public class PageIndexUtils {
 		try {
 			writer = new IndexWriter(dic, new IndexWriterConfig(new StandardAnalyzer()));
 			File files = new File(path);
+			writer.deleteAll();
 			if(files.isDirectory()) {
 				File[] flist = files.listFiles();
 				List<Document> list = new ArrayList<Document>();
 				Document doc = null;
 				for(File file : flist) {
 					doc = new Document();
-					doc.add(new StringField("name", file.getName(), Store.YES));
-					doc.add(new NumericDocValuesField("size", (int)(file.length()/1024)));
+					String fileName = file.getName();
+					doc.add(new StringField("name", fileName.substring(0, fileName.lastIndexOf(".")), Store.YES));
+					doc.add(new StoredField("filesize", file.length()));
+					doc.add(new NumericDocValuesField("size", file.length()));
 					doc.add(new StringField("path", file.getAbsolutePath(), Store.YES));
+					doc.add(new StringField("suffix", file.getName().substring(fileName.lastIndexOf(".")+1), Store.YES));
 					doc.add(new TextField("content", FileUtils.readFileToString(file, Charset.forName("UTF-8")), Store.NO));
+					doc.add(new StoredField("filedate", file.lastModified()));
+					doc.add(new NumericDocValuesField("date", file.lastModified()));
 					list.add(doc);
 				}
 				if(list != null) {
 					writer.addDocuments(list);
 				}
 			}
+			writer.commit();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
